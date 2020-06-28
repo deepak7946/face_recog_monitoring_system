@@ -1,0 +1,24 @@
+<!DOCTYPE html> 
+<htmllang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Pi video stream</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" media="screen">
+    </head>
+    <body>
+       <div class="container">
+            <h1 class="jumbotron text-center">Home Monitor</h1>
+            <h2> Login to view the feed </h2>
+            <br>
+            <form action="" method="post">
+                <input type="text" placeholder="Username" name="username" value="{{request.form.username}}">
+                <input type="password" placeholder="Password" name="password" value="{{request.form.password}}">
+                <input class="btn btn-default" type="submit" value="Login">
+            </form>
+            {% if error %}
+                <p class="error"><em>Wrong credentials</em> {{ error }}
+            {% endif %}
+       </div>
+    </body>
+</html>
