@@ -7,7 +7,6 @@ import socket
 import time
 import threading
 import json
-#from flask.flask_login import login_required
 
 print("Flask App loading ... ")
 app = Flask (__name__)
@@ -16,20 +15,15 @@ video = cv2.VideoCapture(0)
 #print("Setting Resolution")
 #video.set(3, 320)
 #video.set(4, 320)
+sessions = []
 
 @app.route("/login", methods=['GET', 'POST'])
 def login_page():
     error = None
-    with open("static/creds.json", "r") as f:
-        creds = json.load(f)
+    print(request.remote_addr)
     if request.method == 'POST':
-        username = request.form["username"].lower()
-        password = request.form["password"]
-        if username in creds.keys():
-            if password == creds[username]:
-                return redirect(url_for("video_feed_page"))
-            else:
-               error = "Invalid credentials. Please try again"
+        if valid_login(request.form["username"].lower(), request.form["password"]):
+            return redirect(url_for("video_feed_page"))
         else:
             error = "Invalid credentials. Please try again"
     return render_template("login.html", error=error)
@@ -46,7 +40,6 @@ def gen_camera():
         yield(img)
 
 @app.route("/video_feed_page")
-#@login_required
 def video_feed_page():
     return render_template("video_feed.html")
 
@@ -54,6 +47,14 @@ def video_feed_page():
 def video_feed():
     return Response(gen_camera(), 
                     mimetype='multipart/x-mixed-replace; boundary=frame')
+
+def valid_login(username, password):
+    with open("static/creds.json",  "r") as f:
+        creds = json.load(f)
+    if username in creds.keys():
+        if password == creds[username]:
+            return True
+    return False
 
 if __name__ == "__main__":
     web_app = app.run(host="0.0.0.0", port=8001, threaded=True)
