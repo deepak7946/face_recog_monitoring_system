@@ -7,16 +7,11 @@ import socket
 import time
 import threading
 import json
-
+from face_recog.face_capture import FaceCapture 
 print("Flask App loading ... ")
 app = Flask (__name__)
-print("Creating vide capture obj")
-video = cv2.VideoCapture(0)
-#print("Setting Resolution")
-#video.set(3, 320)
-#video.set(4, 320)
-sessions = []
 
+@app.route("/", methods=['GET', 'POST'])
 @app.route("/login", methods=['GET', 'POST'])
 def login_page():
     error = None
@@ -28,24 +23,14 @@ def login_page():
             error = "Invalid credentials. Please try again"
     return render_template("login.html", error=error)
 
-@app.route("/")
-def home_page():
-    return redirect(url_for("login_page"))
-
-def gen_camera():
-    while True:
-        _, frame = video.read()
-        byteArray = cv2.imencode('.jpg', frame)[1].tobytes()
-        img = (b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + byteArray + b'\r\n')
-        yield(img)
-
 @app.route("/video_feed_page")
 def video_feed_page():
     return render_template("video_feed.html")
 
 @app.route("/video_feed")
 def video_feed():
-    return Response(gen_camera(), 
+    fc = FaceCapture()
+    return Response(fc.capture_face_feed(), 
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
 def valid_login(username, password):
