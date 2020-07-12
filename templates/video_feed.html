@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+﻿<!DOCTYPE html> 
 <htmllang="en">
     <head>
         <meta charset="utf-8">
@@ -10,5 +10,12 @@
     <body>
         <h1 class="jumbotron text-center">Pi Camera video stream</h1>
         <img class="jumbotron" src="{{url_for('video_feed')}}">
+        <form method="POST">
+            <input name="name" value="{{request.form.name}}"/>
+            <input type="submit" name="Capture" value="Capture" />
+        </form>
+        {% if error %}
+        <p class="error" style="color:white">{{ error }}
+        {% endif %}
     </body>
 </html>
