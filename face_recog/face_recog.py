@@ -21,7 +21,7 @@ class FaceRecog(object):
         count = 1
         for img_path in img_list:
             name = img_path.split(os.path.sep)[-2]
-            print("Processing image {}/{}" .format(total_imgs))
+            print("Processing image {}/{}" .format(count, total_imgs))
             img = cv2.imread(img_path)
             img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
             face_loc = face_recognition.face_locations(img, model=self.detection_method)
