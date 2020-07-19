@@ -9,9 +9,11 @@
     </head>
     <body>
         <h1 class="jumbotron text-center">Pi Camera video stream</h1>
-        <img class="jumbotron" src="{{url_for('video_feed')}}">
+        <div class="box">
+            <img class="jumbotron" class="img-fluid" src="{{url_for('video_feed')}}">
+        </div>
         <form method="POST">
-            <input name="name" value="{{request.form.name}}"/>
+            <input name="name" value="{{request.form.name}}" />
             <input type="submit" name="Capture" value="Capture" />
         </form>
         {% if error %}

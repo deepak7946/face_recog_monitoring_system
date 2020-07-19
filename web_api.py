@@ -17,7 +17,6 @@ fc.start_camera()
 @app.route("/login", methods=['GET', 'POST'])
 def login_page():
     error = None
-    print(request.remote_addr)
     if request.method == 'POST':
         if valid_login(request.form["username"].lower(), request.form["password"]):
             return redirect(url_for("video_feed_page"))
