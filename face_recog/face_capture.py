@@ -3,27 +3,42 @@ import cv2
 import time
 import os
 import imutils
-import glob
+import sys
+from face_recog.face_recog import FaceRecog as fr
 
 class FaceCapture:
     def __init__(self):
         haarcascade = os.path.join(os.path.dirname(__file__), 'haarcascade_frontalface_default.xml')
         self.detector = cv2.CascadeClassifier(haarcascade)
         self.out_dir = os.path.join(os.path.dirname(__file__), "images/")
+        if not os.path.exists(self.out_dir):
+            os.mkdir(self.out_dir)
         self.vc = None
+        self.req_api = False
+        self.face_recog = fr()  # temporary attribute. Wont be used once face rocog is separate api
         return
 
-    def read_draw_rect(self, save_orig=False, path=None):
+    def read_draw_rect(self, save_orig=False, path=None, identify=True):
         _, frame = self.vc.read()
         frame = imutils.resize(frame, width=400)
         if save_orig:
             cv2.imwrite(path, frame)
         else:
-            rects = self.detector.detectMultiScale(cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY),
-                                                   scaleFactor=1.1, minNeighbors=5,
-                                                   minSize=(30,30))
-            for x, y, w, h in rects:
-                cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 2)
+            if identify:
+                """
+                Temporary method to recognise. Change face recognition as separate API.
+                """
+                name_loc = self.face_recog.identify_face(frame)
+                for (top, right, bottom, left), name in name_loc:
+                    cv2.rectangle(frame, (left, top), (right, bottom), (0, 255, 0), 1)
+                    y = top - 15 if top - 15 > 15 else top + 15
+                    cv2.putText(frame, name, (left, y), cv2.FONT_HERSHEY_SIMPLEX, 0.50, (0, 255, 0), 1)
+            else:
+                rects = self.detector.detectMultiScale(cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY),
+                                                       scaleFactor=1.1, minNeighbors=5,
+                                                       minSize=(30,30))
+                for x, y, w, h in rects:
+                    cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 2)
         return frame
 
     def start_camera(self):
@@ -75,5 +90,3 @@ class FaceCapture:
 
 if __name__ == "__main__":
     cap = FaceCapture()
-    cap.start_camera()
-    cap.take_snap("deepak")
