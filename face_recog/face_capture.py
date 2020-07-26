@@ -4,7 +4,11 @@ import time
 import os
 import imutils
 import sys
-from face_recog.face_recog import FaceRecog as fr
+import requests
+import json
+#from face_recog.face_recog import FaceRecog as fr
+
+predict_URI = 'http://localhost:8002'
 
 class FaceCapture:
     def __init__(self):
@@ -15,7 +19,9 @@ class FaceCapture:
             os.mkdir(self.out_dir)
         self.vc = None
         self.req_api = False
-        self.face_recog = fr()  # temporary attribute. Wont be used once face rocog is separate api
+        #self.face_recog = fr()  # temporary attribute. Wont be used once face rocog is separate api
+        self.url = predict_URI+"/predict"
+        self.header = {'content_type': 'image/jpeg'}
         return
 
     def read_draw_rect(self, save_orig=False, path=None, identify=True):
@@ -28,7 +34,11 @@ class FaceCapture:
                 """
                 Temporary method to recognise. Change face recognition as separate API.
                 """
-                name_loc = self.face_recog.identify_face(frame)
+                _, encoded_frame = cv2.imencode('.jpg', frame)
+                response = requests.post(self.url, data=encoded_frame.tostring(), headers=self.header)
+                name_loc = json.loads(response.text)
+                name_loc = name_loc['data']
+                #name_loc = self.face_recog.identify_face(frame)
                 for (top, right, bottom, left), name in name_loc:
                     cv2.rectangle(frame, (left, top), (right, bottom), (0, 255, 0), 1)
                     y = top - 15 if top - 15 > 15 else top + 15

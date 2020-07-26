@@ -1,11 +1,11 @@
 #!/usr/bin/python3.7
 
 from flask import Flask, render_template, Response, redirect, url_for, request
-import io
+#import io
 import cv2
-import socket
+#import socket
 import time
-import threading
+#import threading
 import json
 from face_recog.face_capture import FaceCapture 
 print("Flask App loading ... ")
