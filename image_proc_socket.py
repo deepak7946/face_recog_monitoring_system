@@ -1,5 +1,5 @@
 import cv2
-from face_recog.face_recog import FaceRecog
+from utils.face_recog import FaceRecog
 import numpy as np
 import pickle
 import socket

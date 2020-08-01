@@ -3,7 +3,7 @@
 from flask import Flask, render_template, Response, redirect, url_for, request
 import cv2
 import time
-from face_recog.face_capture import FaceCapture
+from utils.face_capture import FaceCapture
 import json
 
 print("Flask App loading ... ")
@@ -11,7 +11,6 @@ app = Flask (__name__)
 fc = FaceCapture()
 fc.start_camera()
 
-@app.route("/", methods=['GET', 'POST'])
 @app.route("/login", methods=['GET', 'POST'])
 def login_page():
     error = None
@@ -22,6 +21,7 @@ def login_page():
             error = "Invalid credentials. Please try again"
     return render_template("login.html", error=error)
 
+@app.route("/", methods=['GET', 'POST'])
 @app.route("/video_feed_page", methods=["GET", "POST"])
 def video_feed_page():
     error = None

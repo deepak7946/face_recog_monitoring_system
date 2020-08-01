@@ -2,7 +2,7 @@ import cv2
 import time
 import os
 import imutils
-from face_recog.connection_agent import connection_agent
+from utils.connection_agent import connection_agent
 
 
 class FaceCapture:
