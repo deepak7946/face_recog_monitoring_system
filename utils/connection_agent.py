@@ -9,7 +9,6 @@ class connection_agent:
         self.server_status = "Not Connected"
         self.server_ip = "127.0.0.1"
         self.server = None
-        self.server_connect()
         return
     
     def get_server(self):
@@ -17,6 +16,10 @@ class connection_agent:
 
     def get_server_status(self):
         return self.server_status
+
+    def set_serverip(self, ip):
+        self.server_ip = ip
+        return
 
     def server_connect(self):
         try:
@@ -27,7 +30,7 @@ class connection_agent:
             self.server_status = "Connected"
         except OSError as errmsg:
             self.server_status = "Not Connected"
-            print("ERROR: {}" .format(errmsg))
+            print("Connection to {} FAILED: {}" .format(self.server_ip, errmsg))
             self.server = None
         return
 

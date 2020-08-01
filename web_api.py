@@ -5,11 +5,12 @@ import cv2
 import time
 from utils.face_capture import FaceCapture
 import json
+import argparse
 
-print("Flask App loading ... ")
 app = Flask (__name__)
 fc = FaceCapture()
 fc.start_camera()
+
 
 @app.route("/login", methods=['GET', 'POST'])
 def login_page():
@@ -46,8 +47,17 @@ def valid_login(username, password):
             return True
     return False
 
+def connect_socket():
+    parser = argparse.ArgumentParser(description='Provide IP of server for face recognition')
+    parser.add_argument("--serverIP", type=str, help="Provide ip of face recog server. (Default: 127.0.0.1)",
+                        default="127.0.0.1")
+    args = parser.parse_args()
+    fc.server_conn_agent.set_serverip(args.serverIP)
+    fc.server_conn_agent.server_connect()
 
 
 if __name__ == "__main__":
+    connect_socket()
+    print("Flask App loading ... ")
     app.run(host="0.0.0.0", port=8001, threaded=True)
 
