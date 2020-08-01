@@ -9,3 +9,4 @@ The project is based on face recognition using OpenCV and pre trained 128-D Deep
 The services are Rest API based, implemented using Flask and Python.
 
 # Working
+![Capture](https://user-images.githubusercontent.com/47440070/89106342-c8ce8b80-d446-11ea-91e2-e3d7f8039599.PNG)
