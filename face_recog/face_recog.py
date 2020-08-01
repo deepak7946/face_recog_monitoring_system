@@ -51,7 +51,6 @@ class FaceRecog(object):
         return
 
     def identify_face(self, img):
-        #self.load_encodings()
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         face_loc = face_recognition.face_locations(img, model=self.detection_method)
         encodings = face_recognition.face_encodings(img, face_loc)
@@ -65,7 +64,6 @@ class FaceRecog(object):
         return list(zip(face_loc, names))
 
     def vote_for_id(self, possible_ids):
-        #Get the index of True in the list
         true_index = [index for (index, value) in enumerate(possible_ids) if value]
         counts = {}
         for i in true_index:
@@ -73,7 +71,6 @@ class FaceRecog(object):
             counts[name] = counts.get(name, 0) + 1
         name = max(counts, key=counts.get)
         return name
- 
             
 
 if __name__ == "__main__":

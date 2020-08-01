@@ -1,14 +1,9 @@
-import argparse
 import cv2
 import time
 import os
 import imutils
-import sys
-import requests
-import json
-#from face_recog.face_recog import FaceRecog as fr
+from face_recog.connection_agent import connection_agent
 
-predict_URI = 'http://localhost:8002'
 
 class FaceCapture:
     def __init__(self):
@@ -18,10 +13,7 @@ class FaceCapture:
         if not os.path.exists(self.out_dir):
             os.mkdir(self.out_dir)
         self.vc = None
-        self.req_api = False
-        #self.face_recog = fr()  # temporary attribute. Wont be used once face rocog is separate api
-        self.url = predict_URI+"/predict"
-        self.header = {'content_type': 'image/jpeg'}
+        self.server_conn_agent = connection_agent()
         return
 
     def read_draw_rect(self, save_orig=False, path=None, identify=True):
@@ -30,19 +22,17 @@ class FaceCapture:
         if save_orig:
             cv2.imwrite(path, frame)
         else:
-            if identify:
-                """
-                Temporary method to recognise. Change face recognition as separate API.
-                """
-                _, encoded_frame = cv2.imencode('.jpg', frame)
-                response = requests.post(self.url, data=encoded_frame.tostring(), headers=self.header)
-                name_loc = json.loads(response.text)
-                name_loc = name_loc['data']
-                #name_loc = self.face_recog.identify_face(frame)
-                for (top, right, bottom, left), name in name_loc:
-                    cv2.rectangle(frame, (left, top), (right, bottom), (0, 255, 0), 1)
-                    y = top - 15 if top - 15 > 15 else top + 15
-                    cv2.putText(frame, name, (left, y), cv2.FONT_HERSHEY_SIMPLEX, 0.50, (0, 255, 0), 1)
+            if self.server_conn_agent.get_server_status() == "Connected":
+                try:
+                    response = self.server_conn_agent.send_frame(frame)
+                    name_loc = response['data']
+                    for (top, right, bottom, left), name in name_loc:
+                        cv2.rectangle(frame, (left, top), (right, bottom), (0, 255, 0), 1)
+                        y = top - 15 if top - 15 > 15 else top + 15
+                        cv2.putText(frame, name, (left, y), cv2.FONT_HERSHEY_SIMPLEX, 0.50, (0, 255, 0), 1)
+                except TypeError:
+                    print("Server connection lost. Rolling back to local face detection without recognition")
+                    pass
             else:
                 rects = self.detector.detectMultiScale(cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY),
                                                        scaleFactor=1.1, minNeighbors=5,
@@ -97,6 +87,7 @@ class FaceCapture:
             self.vc.release()
             cv2.destroyAllWindows()
         self.vc = None
+
 
 if __name__ == "__main__":
     cap = FaceCapture()

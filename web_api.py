@@ -1,13 +1,11 @@
 #!/usr/bin/python3.7
 
 from flask import Flask, render_template, Response, redirect, url_for, request
-#import io
 import cv2
-#import socket
 import time
-#import threading
+from face_recog.face_capture import FaceCapture
 import json
-from face_recog.face_capture import FaceCapture 
+
 print("Flask App loading ... ")
 app = Flask (__name__)
 fc = FaceCapture()
@@ -47,6 +45,8 @@ def valid_login(username, password):
         if password == creds[username]:
             return True
     return False
+
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8001, threaded=True)
