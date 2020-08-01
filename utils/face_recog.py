@@ -34,6 +34,7 @@ class FaceRecog(object):
     def save_encodings(self):
         with open(self.encode_file, "wb") as f:
             pickle.dump(self.face_encodings, f)
+        print("Encodings saved to {}" .format(self.encode_file))
         return
 
     def change_detec_method(self, method="cnn"):
@@ -71,9 +72,4 @@ class FaceRecog(object):
             counts[name] = counts.get(name, 0) + 1
         name = max(counts, key=counts.get)
         return name
-            
-
-if __name__ == "__main__":
-    fr = FaceRecog()
-    fr.encode_faces()
-    fr.save_encodings()
+    
