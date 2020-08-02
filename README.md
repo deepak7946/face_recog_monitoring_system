@@ -6,8 +6,7 @@ The project is based on face recognition using OpenCV and pre trained 128-D Deep
 - The front end with vidoe stream and captures the frames from camera feed
 - The backend Deep Learning based facial recognition system
 
-# Working
-## Architecture
+# Architecture
 ![Capture](https://user-images.githubusercontent.com/47440070/89106342-c8ce8b80-d446-11ea-91e2-e3d7f8039599.PNG)
 
 - A socket connection is establised between face recognition server and raspberry pi
@@ -16,7 +15,6 @@ The project is based on face recognition using OpenCV and pre trained 128-D Deep
 - The server processes the frame and sends it back to rasperry pi to display on webpage
 
 Face recognition program uses pre trained CNN model to perform the recognition. Raspberry pi cannot run the CNN model due to resource limitations.
-## Face Recognition
 
 # Usage
 The code is written on python3.
