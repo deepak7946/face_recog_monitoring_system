@@ -1,5 +1,5 @@
 # face_recog_monitoring_system
-The application is built on raspbery pi 4
+The application is face recognition monitoring system built on Raspberry Pi 4. The system uses CNN for face recognition. To offload the recognition overload from Raspberry Pi the  recognition module is run on another system with higher resources and a socket connection is established between the systems for real time face. 
 
 # Intro
 The project is based on face recognition using OpenCV and pre trained 128-D Deep Learning facial embedding (face_recognition python package). The project has two parts 
